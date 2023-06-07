@@ -17,12 +17,22 @@ All methods are light weight models so that 1 GPU (V100) is enough. But it still
 
 Code organization:
 * `data/` - directory contains dataset download code and even native pdb files.
-* `helper_scripts` - helper functions for future works like multi chains parsing and residue fix, adding AA bias, tying residue etc.
+* `helper_scripts/` - helper functions for future works like multi chains parsing and residue fix, adding AA bias, tying residue etc.
 * `models/` - directory of models for LMDesign, Structure adapter, ProteinMPNN, Pifold, ESM models and utilities.   
 * `results/` - contains conducted experimental results like ProtMPNN, ProtMPNN-CMLM, LMDesign1, LMDesign2, and LMDesign2.
 * `scripts/` - contains the shell script to reproduce our models 
-* `weights/` - directory of base inverse fold model weight e.g, ProteinMPNN, PiFold 
+* `weights/` - directory of base inverse fold model weight e.g, ProteinMPNN, PiFold
+* `mpnn_train.py` - train and validate protMPNN and protMPNN-CMLM models 
+* `mpnn_test.py` - test protMPNN and protMPNN-CMLM models on CATH4.2 and extra test dataset TS50 and TS500
+* `lmdesign_train.py` - train and validate the variate LMDesign models on CATH4.2
+* `lmdesign_test.py` - test LMDesign models on CATH4.2 and extra test dataset TS50 and TS500
 -----------------------------------------------------------------------------------------------------
+
+## Data preparation 
+Main dataset used in this models are CATH4.2. To install the dataset, go to data and follow command:
+    ./download_preprocessed_dataset.sh 
+This will automatically download dataset on current folder. For TS dataset, it should be unzip after installation.
+
 
 Main model weights : ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
 
