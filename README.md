@@ -33,8 +33,28 @@ Main dataset used in this models are CATH4.2. To install the dataset, go to data
     ./download_preprocessed_dataset.sh 
 This will automatically download dataset on current folder. For TS dataset, it should be unzip after installation.
 
+## Trained model weight preparation 
+Trained ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
+For reproducing the reported experimental results, install ProtMPNN, ProtMPNN-CMLM, LMDesign* weights from above. 
+For initial training model, ESM weights are mendatory.
 
-Main model weights : ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
+# Reproduce ProtMPNN models 
+Please refer to "scripts/mpnn_test.sh". Please set mendatory path like data:
+save_dir='where you want to save the result of experiment'
+saved_weight='Trained weight path and id e.g., /data/project/rw/mpnn_results/reproduce2/model_weights/epoch100.pt'
+cath_file='path for CATH jsonl file e.g., /data/project/rw/cath4.2/chain_set.jsonl'
+cath_splits='path for split train/valid/test json file e.g., /data/project/rw/cath4.2/chain_set_splits.json'
+short_splits='path for short test json file e.g., /data/project/rw/cath4.2/test_split_L100.json'
+single_splits='path for single chain test json file e.g., /data/project/rw/cath4.2/test_split_sc.json'
+ts_dir='directory contains ts50, ts500 json file e.g., /data/project/rw/ts/'
+after setting up above, run mpnn_test.sh file.
+
+
+
+
+
+
+
 
 
 
