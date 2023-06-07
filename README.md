@@ -43,6 +43,7 @@ Trained ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretraine
 For reproducing the reported experimental results, install ProtMPNN, ProtMPNN-CMLM, LMDesign* weights from above. 
 For initial training model, ESM weights are mendatory.
 
+-----------------------------------------------------------------------------------------------------
 ## Reproduce ProtMPNN and ProtMPNN-CMLM models 
 This model only has Structure encoder (ProtMPNN).
 To test pretrained ProtMPNN and ProtMPNN-CMLM model, please refer to "scripts/mpnn_test.sh". 
@@ -82,14 +83,15 @@ To train ProtMPNN-CMLM model, everything same as above except :
 ```
 run mpnn.sh in script.
 
+-----------------------------------------------------------------------------------------------------
 ## Reproduce LMDesign models 
 LMDesign contains three main modules Structure encoder (protMPNN), Protein Language Model (ESM1b) and strcuture adapter.
-# LMDesign1 (ProtMPNN-CMLM)
+## LMDesign1 (ProtMPNN-CMLM)
 To test pretrained LMDesign1 model, please refer to "scripts/lmdesign_test.sh". 
 To do so, set mendatory data path in shell scripts :
 ```
-save_dir='/data/private/LMDESIGN/test/lmdesign_exp1_results'
-saved_weight='/data/project/rw/lmdesign_results/lmdesign2_full_encode/model_weights/epoch100.pt' # put path for saved weights
+save_dir=''
+saved_weight='LMDesign1 weight' 
 
 cath_file='/data/project/rw/cath4.2/chain_set.jsonl'
 cath_splits='/data/project/rw/cath4.2/chain_set_splits.json'
@@ -109,11 +111,76 @@ To train the LMDesign1 model, please refer to "script/lmdesign.sh" and "lmdesign
     argparser.add_argument("--test_short_path", type=str, default="/data/project/rw/cath4.2/test_split_L100.json", help="Path to Short test split")
     argparser.add_argument("--test_single_path", type=str, default="/data/project/rw/cath4.2/test_split_sc.json", help="Path to Single test split")
     argparser.add_argument("--chain_id_jsonl",type=str, default='', help="Path to a dictionary specifying which chains need to be designed and which ones are fixed, if not specied all chains will be designed.")
-    
-python lmdesign_train.py --epoch 1 --out_folder /data/private/LMDESIGN/test/lmdesign_exp1_reproduce/ --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable True --jsonl_path --file_splits -test_short_path --test_single_path"
-    
+
+- run below with filling data path 
+python lmdesign_train.py --epoch 30 --out_folder /data/private/LMDESIGN/test/lmdesign_exp1_reproduce/ --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable True --jsonl_path --file_splits -test_short_path --test_single_path"  
 ```
 
+## LMDesign2 (pretrained ProtMPNN-CMLM: fine-tune)
+To test pretrained LMDesign2 model, please refer to "scripts/lmdesign_test.sh". 
+To do so, set mendatory data path in shell scripts :
+```
+save_dir=''
+saved_weight='LMDesign2 weight' # put path for saved weights
+
+cath_file='/data/project/rw/cath4.2/chain_set.jsonl'
+cath_splits='/data/project/rw/cath4.2/chain_set_splits.json'
+short_splits='/data/project/rw/cath4.2/test_split_L100.json'
+single_splits='/data/project/rw/cath4.2/test_split_sc.json'
+ts_dir='/data/project/rw/ts/'
+
+# Training LMDESIGN on CATH4.2 exp2 
+python lmdesign_test.py --use_pretrained_weights $saved_weight --out_folder $save_dir2 --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_weight "" --num_decoder_layers 4 --jsonl_path $cath_file --file_splits $cath_splits --test_short_path $short_splits --test_single_path $single_splits --test_ts_directory $ts_dir
+```
+Our pretrained protMPNN-CMLM model utlizes --num_decoder_layers 4. This would be depending on how pretrain the protMPNN-CMLMmodel. Run the code above.
+
+To train the LMDesign2 model, please refer to "script/lmdesign.sh" and "lmdesign_train.py".
+```
+  - Data path like CATH data path please set below when you run the code.
+    argparser.add_argument("--out_folder", type=str, default='/data/project/rw/mpnn_results/MPNN/', help="Path to a folder to output sequences, e.g. /home/out/")
+    argparser.add_argument("--jsonl_path", type=str,default='/data/project/rw/cath4.2/chain_set.jsonl',help="Path to parsed pdb into jsonl")
+    argparser.add_argument("--file_splits", type=str, default='/data/project/rw/cath4.2/chain_set_splits.json', help='Path to train/valid/test split info')
+    argparser.add_argument("--test_short_path", type=str, default="/data/project/rw/cath4.2/test_split_L100.json", help="Path to Short test split")
+    argparser.add_argument("--test_single_path", type=str, default="/data/project/rw/cath4.2/test_split_sc.json", help="Path to Single test split")
+    argparser.add_argument("--chain_id_jsonl",type=str, default='', help="Path to a dictionary specifying which chains need to be designed and which ones are fixed, if not specied all chains will be designed.")
+
+- run below with filling data path 
+# python lmdesign_train.py --epoch 30 --out_folder '' --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable True --structure_weight 'pretrained protMPNN-CMLM model'
+```
+Run the code above. In this experiment, structure encoder and structure adapters are trainable and PLM are frozen.
+
+## LMDesign3 (pretrained ProtMPNN-CMLM: freeze)
+To test pretrained LMDesign3 model, please refer to "scripts/lmdesign_test.sh". 
+To do so, set mendatory data path in shell scripts :
+```
+save_dir=''
+saved_weight='LMDesign3 weight' 
+
+cath_file='/data/project/rw/cath4.2/chain_set.jsonl'
+cath_splits='/data/project/rw/cath4.2/chain_set_splits.json'
+short_splits='/data/project/rw/cath4.2/test_split_L100.json'
+single_splits='/data/project/rw/cath4.2/test_split_sc.json'
+ts_dir='/data/project/rw/ts/'
+
+# Training LMDESIGN on CATH4.2 exp3
+python lmdesign_test.py --use_pretrained_weights $saved_weight --out_folder $save_dir3 --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_weight "" --num_decoder_layers 4 --jsonl_path $cath_file --file_splits $cath_splits --test_short_path $short_splits --test_single_path $single_splits --test_ts_directory $ts_dir
+```
+Our pretrained protMPNN-CMLM model utlizes --num_decoder_layers 4. This would be depending on how pretrain the protMPNN-CMLMmodel. Run the code above.
+
+To train the LMDesign3 model, please refer to "script/lmdesign2.sh" and "lmdesign_train.py".
+```
+  - Data path like CATH data path please set below when you run the code.
+    argparser.add_argument("--out_folder", type=str, default='/data/project/rw/mpnn_results/MPNN/', help="Path to a folder to output sequences, e.g. /home/out/")
+    argparser.add_argument("--jsonl_path", type=str,default='/data/project/rw/cath4.2/chain_set.jsonl',help="Path to parsed pdb into jsonl")
+    argparser.add_argument("--file_splits", type=str, default='/data/project/rw/cath4.2/chain_set_splits.json', help='Path to train/valid/test split info')
+    argparser.add_argument("--test_short_path", type=str, default="/data/project/rw/cath4.2/test_split_L100.json", help="Path to Short test split")
+    argparser.add_argument("--test_single_path", type=str, default="/data/project/rw/cath4.2/test_split_sc.json", help="Path to Single test split")
+    argparser.add_argument("--chain_id_jsonl",type=str, default='', help="Path to a dictionary specifying which chains need to be designed and which ones are fixed, if not specied all chains will be designed.")
+
+- run below with filling data path 
+python lmdesign_train.py --epoch 100 --out_folder '' --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_weight 'pretrained protMPNN-CMLM model' --num_decoder_layers 4
+```
+Run the code above. In this experiment, LMDesign3 trains only structure adapter. 
 
 
 
