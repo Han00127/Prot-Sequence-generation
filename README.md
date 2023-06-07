@@ -1,8 +1,15 @@
 ### Structure-informed Langugage Models Are Protein Designers
-![LMDesign](https://arxiv.org/abs/2302.01649)
 
 This is the unofficial code of the arxiv paper *Structure-informed Language Models Are Protein Designers* published by *Zhang Zaixiang et al* 
+
+![LMDesign](https://github.com/Han00127/Structure-informed-Language-Models-Are-Protein-Designers/assets/93216105/6bcdcb65-8ce7-4736-ae29-d0302a535c1f)
+
+The detail of paper will be covered in the presentation.
+
+Code implmentation
+-----------------------------------------------------------------------------------------------------
 To run LMDesign clone this github repo and install corresponding .yaml environemnt on your conda or if you are using Braincloud, use lmdesing_final shared image.
+
 
 Helper scripts: `helper_scripts` - helper functions to parse PDBs, assign which chains to design, which residues to fix, adding AA bias, tying residues etc.
 
