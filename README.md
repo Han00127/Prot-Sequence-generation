@@ -40,6 +40,7 @@ For initial training model, ESM weights are mendatory.
 
 # Reproduce ProtMPNN models 
 Please refer to "scripts/mpnn_test.sh". Please set mendatory path like data:
+```
 save_dir='where you want to save the result of experiment'
 saved_weight='Trained weight path and id e.g., /data/project/rw/mpnn_results/reproduce2/model_weights/epoch100.pt'
 cath_file='path for CATH jsonl file e.g., /data/project/rw/cath4.2/chain_set.jsonl'
@@ -47,9 +48,9 @@ cath_splits='path for split train/valid/test json file e.g., /data/project/rw/ca
 short_splits='path for short test json file e.g., /data/project/rw/cath4.2/test_split_L100.json'
 single_splits='path for single chain test json file e.g., /data/project/rw/cath4.2/test_split_sc.json'
 ts_dir='directory contains ts50, ts500 json file e.g., /data/project/rw/ts/'
+
+```
 after setting up above, run mpnn_test.sh file.
-
-
 
 
 
