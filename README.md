@@ -1,12 +1,8 @@
-# ProteinMPNN
-![ProteinMPNN](https://docs.google.com/drawings/d/e/2PACX-1vTtnMBDOq8TpHIctUfGN8Vl32x5ISNcPKlxjcQJF2q70PlaH2uFlj2Ac4s3khnZqG1YxppdMr0iTyk-/pub?w=889&h=358)
-Read [ProteinMPNN paper](https://www.biorxiv.org/content/10.1101/2022.06.03.494563v1).
+### Structure-informed Langugage Models Are Protein Designers
+![LMDesign](https://arxiv.org/abs/2302.01649)
 
-To run ProteinMPNN clone this github repo and install Python>=3.0, PyTorch, Numpy. 
-
-Full protein backbone models: `vanilla_model_weights/v_48_002.pt, v_48_010.pt, v_48_020.pt, v_48_030.pt`, `soluble_model_weights/v_48_010.pt, v_48_020.pt`.
-
-CA only models: `ca_model_weights/v_48_002.pt, v_48_010.pt, v_48_020.pt`. Enable flag `--ca_only` to use these models.
+This is the unofficial code of the arxiv paper *Structure-informed Language Models Are Protein Designers* published by *Zhang Zaixiang et al* 
+To run LMDesign clone this github repo and install corresponding .yaml environemnt on your conda or if you are using Braincloud, use lmdesing_final shared image.
 
 Helper scripts: `helper_scripts` - helper functions to parse PDBs, assign which chains to design, which residues to fix, adding AA bias, tying residues etc.
 
