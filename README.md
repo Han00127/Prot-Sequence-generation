@@ -4,9 +4,11 @@ This is the unofficial code of the arxiv paper *Structure-informed Language Mode
 
 ![LMDesign](https://github.com/Han00127/Structure-informed-Language-Models-Are-Protein-Designers/assets/93216105/6bcdcb65-8ce7-4736-ae29-d0302a535c1f)
 
-One line summary of implmentation: 
+# One line summary of implmentation: 
+
 We achieve relativly similar performance for base model like ProtMPNN, ProtMPNN-CMLM models. However, our implementation achieve surprising results on CATH4.2 and TS test datset such that we reach state-of-the-art performance on both dataset.
 our result / paper results. Please refer to "results/" together to verify the experimental results. 
+
 ![image](https://github.com/Han00127/Structure-informed-Language-Models-Are-Protein-Designers/assets/93216105/bc5c04a8-a81d-4f46-9eb1-3f75bfe18e5c)
 
 Code implmentation
