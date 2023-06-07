@@ -38,7 +38,7 @@ Trained ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretraine
 For reproducing the reported experimental results, install ProtMPNN, ProtMPNN-CMLM, LMDesign* weights from above. 
 For initial training model, ESM weights are mendatory.
 
-# Reproduce ProtMPNN models 
+## Reproduce ProtMPNN and ProtMPNN-CMLM models 
 Please refer to "scripts/mpnn_test.sh". Please set mendatory path like data:
 ```
 save_dir='where you want to save the result of experiment'
@@ -48,12 +48,25 @@ cath_splits='path for split train/valid/test json file e.g., /data/project/rw/ca
 short_splits='path for short test json file e.g., /data/project/rw/cath4.2/test_split_L100.json'
 single_splits='path for single chain test json file e.g., /data/project/rw/cath4.2/test_split_sc.json'
 ts_dir='directory contains ts50, ts500 json file e.g., /data/project/rw/ts/'
-
 ```
 after setting up above, run mpnn_test.sh file.
 
-
-
+To train ProtMPNN model, please refer to "scripts/mpnn.sh" and "mpnn_train.py"
+```
+    - Default setting of ProtMPNN model parameter 
+    argparser.add_argument("--hidden_dim", type=int, default=128, help="hidden model dimension")
+    argparser.add_argument("--num_layers", type=int, default=3, help="number of encoder layers") 
+    argparser.add_argument("--num_neighbors", type=int, default=48, help="number of neighbors for the sparse graph")   
+    argparser.add_argument("--dropout", type=float, default=0.1, help="dropout level; 0.0 means no dropout")
+    argparser.add_argument("--backbone_noise", type=float, default=0.2, help="amount of noise added to backbone during training") 
+    - Data path like CATH data path
+    argparser.add_argument("--out_folder", type=str, default='/data/project/rw/mpnn_results/MPNN/', help="Path to a folder to output sequences, e.g. /home/out/")
+    argparser.add_argument("--jsonl_path", type=str,default='/data/project/rw/cath4.2/chain_set.jsonl',help="Path to parsed pdb into jsonl")
+    argparser.add_argument("--file_splits", type=str, default='/data/project/rw/cath4.2/chain_set_splits.json', help='Path to train/valid/test split info')
+    argparser.add_argument("--test_short_path", type=str, default="/data/project/rw/cath4.2/test_split_L100.json", help="Path to Short test split")
+    argparser.add_argument("--test_single_path", type=str, default="/data/project/rw/cath4.2/test_split_sc.json", help="Path to Single test split")
+    argparser.add_argument("--chain_id_jsonl",type=str, default='', help="Path to a dictionary specifying which chains need to be designed and which ones are fixed, if not specied all chains will be designed.")
+```
 
 
 
