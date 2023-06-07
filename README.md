@@ -15,11 +15,6 @@ conda env create --file lmdesign.yaml
 
 All methods are light weight models so that 1 GPU (V100) is enough. But it still has depency on CPU computing on featurizations on both structure and PLM models. 
 
-## Code organization 
-* 
-
-Main model weights : ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
-
 Code organization:
 * `data/` - directory contains dataset download code and even native pdb files.
 * `helper_scripts` - helper functions for future works like multi chains parsing and residue fix, adding AA bias, tying residue etc.
@@ -28,6 +23,11 @@ Code organization:
 * `scripts/` - contains the shell script to reproduce our models 
 * `weights/` - directory of base inverse fold model weight e.g, ProteinMPNN, PiFold 
 -----------------------------------------------------------------------------------------------------
+
+Main model weights : ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
+
+
+
 Input flags for `protein_mpnn_run.py`:
 ```
     argparser.add_argument("--suppress_print", type=int, default=0, help="0 for False, 1 for True")
