@@ -8,19 +8,25 @@ The detail of paper will be covered in the presentation.
 
 Code implmentation
 -----------------------------------------------------------------------------------------------------
-To run LMDesign clone this github repo and install corresponding .yaml environemnt on your conda or if you are using Braincloud, use lmdesing_final shared image.
+To run LMDesign clone this github repo and install corresponding **lmdesign.yaml** environemnt on your conda or if you are using Braincloud, use **lmdesing_final** shared image.
 
+If use yaml installation, please check dependency in yaml files and install with the following command: 
+conda env create --file lmdesign.yaml 
 
-Helper scripts: `helper_scripts` - helper functions to parse PDBs, assign which chains to design, which residues to fix, adding AA bias, tying residues etc.
+All methods are light weight models so that 1 GPU (V100) is enough. But it still has depency on CPU computing on featurizations on both structure and PLM models. 
+
+## Code organization 
+* 
+
+Main model weights : ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
 
 Code organization:
-* `protein_mpnn_run.py` - the main script to initialialize and run the model.
-* `protein_mpnn_utils.py` - utility functions for the main script.
-* `examples/` - simple code examples.
-* `inputs/` - input PDB files for examples
-* `outputs/` - outputs from examples
-* `colab_notebooks/` - Google Colab examples
-* `training/` - code and data to retrain the model
+* `data/` - directory contains dataset download code and even native pdb files.
+* `helper_scripts` - helper functions for future works like multi chains parsing and residue fix, adding AA bias, tying residue etc.
+* `models/` - directory of models for LMDesign, Structure adapter, ProteinMPNN, Pifold, ESM models and utilities.   
+* `results/` - contains conducted experimental results like ProtMPNN, ProtMPNN-CMLM, LMDesign1, LMDesign2, and LMDesign2.
+* `scripts/` - contains the shell script to reproduce our models 
+* `weights/` - directory of base inverse fold model weight e.g, ProteinMPNN, PiFold 
 -----------------------------------------------------------------------------------------------------
 Input flags for `protein_mpnn_run.py`:
 ```
