@@ -183,4 +183,7 @@ python lmdesign_train.py --epoch 100 --out_folder '' --embed_dim 1280 --num_head
 Run the code above. In this experiment, LMDesign3 trains only structure adapter. 
 
 
+If you struggle with reproducing on my code,  please contact me via email (구일kthan 엣 gmail.com). Or any verification on my code will be welcomed :)
+
+
 
