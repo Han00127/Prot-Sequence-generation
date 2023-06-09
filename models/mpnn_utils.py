@@ -57,7 +57,7 @@ class TS50(data.Dataset):
         else:
             ts50_data = json.load(open(path+'ts50.json'))
 
-        # TS50 only contains proteins with lengths less than 500
+        # TS50 only contains lengths less than 500
         self.data = []
         for temp in ts50_data:
             coords = np.array(temp['coords'])
@@ -82,17 +82,15 @@ class TS50(data.Dataset):
         return self.data[index]
 
 
-## KTHAN TS benchmarks 
+## KTHAN TS benchmarks slightly modified from PiFold
 class TS500(data.Dataset):
     def __init__(self, path = './'): 
         if not os.path.exists(path):
             raise "no such file:{} !!!".format(path)
         else:
-            # ts500_data = json.load(open('/data/project/rw/ts/ts500.json'))
             ts500_data = json.load(open(path+'ts500.json'))
 
         # TS500 has proteins with lengths of 500+
-        # TS50 only contains proteins with lengths less than 500
         self.data = []
         for temp in ts500_data:
             coords = np.array(temp['coords'])
@@ -160,7 +158,7 @@ def s_encoder_cmlm_mask(tokens, mask):
     rand = rand.to(tokens.device)
     mask_arr = rand < 0.35
     mask_arr = (rand < 0.35)
-    temp_mask = mask_arr * mask ## Not include cls, eos tokens
+    temp_mask = mask_arr * mask
     mask_arr = temp_mask
     return tokens,mask_arr
 
@@ -895,10 +893,6 @@ class StructureDataset():
                 seq = entry['seq'] 
                 name = entry['name']
 
-                # Convert raw coords to np arrays
-                #for key, val in entry['coords'].items():
-                #    entry['coords'][key] = np.asarray(val)
-
                 # Check if in alphabet
                 bad_chars = set([s for s in seq]).difference(alphabet_set)
                 if len(bad_chars) == 0:
@@ -910,8 +904,6 @@ class StructureDataset():
                     else:
                         discard_count['too_long'] += 1
                 else:
-                    # if verbose:
-                    #     print(name, bad_chars, entry['seq'])
                     discard_count['bad_chars'] += 1
 
                 # Truncate early
@@ -920,7 +912,6 @@ class StructureDataset():
 
                 if verbose and (i + 1) % 1000 == 0:
                     elapsed = time.time() - start
-                    # print('{} entries ({} loaded) in {:.1f} s'.format(len(self.data), i+1, elapsed))
             if verbose:
                 print('discarded', discard_count)
     def __len__(self):
@@ -1836,9 +1827,3 @@ def get_std_opt(parameters, d_model, step):
     return NoamOpt(
         d_model, 2, 4000, torch.optim.Adam(parameters, lr=0, betas=(0.9, 0.98), eps=1e-9), step
     )
-
-
-
-
-
-
