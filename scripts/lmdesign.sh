@@ -11,15 +11,15 @@ pretrained_weights='/data/project/rw/LMDesign_weights/mpnn_cmlm_trained_weight.p
 #####################################
 ## Single implementation if make separated shell script for each experiment like lmdesign1.sh lmdesign2.sh lmdesign3.sh with given scripts
 # Training LMDESIGN on CATH4.2 exp1 
-python lmdesign_train.py --epoch 1 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
+python lmdesign_train.py --epoch 100 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
                          --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable True --num_decoder_layers 4  --structure_weight ""
 
 # Training LMDESIGN on CATH4.2 exp2
-python lmdesign_train.py --epoch 1 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
+python lmdesign_train.py --epoch 100 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
                         --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable True --structure_weight $pretrained_weights --num_decoder_layers 4
 
 # Training LMDESIGN on CATH4.2 exp3
-python lmdesign_train.py --epoch 10 --out_folder$out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
+python lmdesign_train.py --epoch 100 --out_folder$out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
                          --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable False --structure_weight $pretrained_weights --num_decoder_layers 4
 
 #######################################
@@ -39,11 +39,11 @@ pretrained_weights='/data/project/rw/LMDesign_weights/mpnn_cmlm_trained_weight.p
 
 
 # Training LMDESIGN on CATH4.2 exp1 
-python lmdesign_train.py --epoch 1 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
+python lmdesign_train.py --epoch 100 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
                          --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable True --num_decoder_layers 4  --structure_weight "" &
 
 # Training LMDESIGN on CATH4.2 exp2
-python lmdesign_train.py --epoch 1 --out_folder $out_folder2 --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
+python lmdesign_train.py --epoch 100 --out_folder $out_folder2 --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath \
                         --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable True --structure_weight $pretrained_weights --num_decoder_layers 4
 
 wait
