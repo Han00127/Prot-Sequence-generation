@@ -16,7 +16,7 @@ class StructureAdapter(nn.Module):
         self.ffn_activation = nn.GELU()
         self.ffn_up_project = nn.Linear(640,1280)
 
-        # Multi Head Cross Attention modules 
+        # Multi Head Cross Attention modules - takes structure representation as key and value and plm representation as query
         self.attn = CrossMultiheadAttention(input_dim=args.hidden_dim, embed_dim=args.embed_dim, num_heads=args.num_heads)
         self.LN = torch.nn.LayerNorm(1280)
 
