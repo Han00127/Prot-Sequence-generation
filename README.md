@@ -97,10 +97,10 @@ after setting up above, run mpnn_train.sh file.
 To train ProtMPNN-CMLM model, please refer to "scripts/mpnn_cmlm.sh" and "mpnn_train.py"
 ```
 # Training from pretrained model vanilla ProtMPNN model - v_48_020.pt)) encoder decoder 3 / 3 as same as official model
-# python mpnn_train.py --model MPNN_CMLM --epoch 1 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath
+# python mpnn_train.py --model MPNN_CMLM --epoch 100 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath
 
 ## My trained models has 4 decoder layers training from scratch
-python mpnn_train.py --model MPNN_CMLM --epoch 1 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath --use_pretrained_weights "" --num_decoder_layers 4 
+python mpnn_train.py --model MPNN_CMLM --epoch 100 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath --use_pretrained_weights "" --num_decoder_layers 4 
 ```
 run **mpnn_cmlm.sh** in script.
 
@@ -230,7 +230,7 @@ To train the LMDesign3 model, please refer to "script/lmdesign.sh" and "lmdesign
 # ## Single implmenation 
 # #####################################
 # # Training LMDESIGN on CATH4.2 exp3
-# python lmdesign_train.py --epoch 10 --out_folder$out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable False --structure_weight $pretrained_weights --num_decoder_layers 4
+# python lmdesign_train.py --epoch 100 --out_folder$out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath --embed_dim 1280 --num_heads 10 --structure_model MPNN --structure_trainable False --structure_weight $pretrained_weights --num_decoder_layers 4
 ```
 Run the code above. In this experiment, LMDesign3 trains only structure adapter. 
 
