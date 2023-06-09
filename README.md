@@ -237,7 +237,9 @@ Run the code above. In this experiment, LMDesign3 trains only structure adapter.
 
 I strongly recommend to use parallel execution just add "&" in the scripts. This is because the trainable weights are relatively small. To maximize utilization of GPU, please process_train1 & process_train2. For the details of it, please refer to "./scripts/lmdesign.sh 
 
-If you struggle with reproducing on my code,  please contact me via email (구일kthan 엣 gmail.com). Or any verification or feedback on my code will be welcome :)
+If you struggle with reproducing on my code,  please contact me via email (구일kthan 엣 gmail.com). Or any verification or feedback on my code will welcome :)
+
+Further training information on tensorboard are located in the Braincloud (e.g., /data/project/rw/lmdesign_results, codetest_result). 
 
 
 
