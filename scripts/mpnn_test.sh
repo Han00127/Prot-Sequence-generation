@@ -11,8 +11,8 @@ ts_dir='./data/ts/'
 # #################################################
 # ## set models - ProtMPNN
 # #################################################
-save_dir='./result/mpnn_reproduce/test'
-saved_weight='/data/project/rw/LMDesign_weights/mpnn_trained_weight.pt'
+save_dir='./result/mpnn_reproduce/'
+saved_weight='/data/project/rw/LMDesign_weights/mpnn_trained_weight.pt' ## If you are able to access project folder, you can use this code. Otherwise, install weights 
 
 # Test trained model on CATH4.2 and TS50 & 500
 python mpnn_test.py --use_pretrained_weights $saved_weight --out_folder $save_dir --jsonl_path $cath_file --file_splits $cath_splits --test_short_path $short_splits --test_single_path $single_splits --test_ts_directory $ts_dir 
@@ -21,10 +21,9 @@ python mpnn_test.py --use_pretrained_weights $saved_weight --out_folder $save_di
 #################################################
 ## set models - ProtMPNN+CMLM
 #################################################
-save_dir='./result/mpnn_cmlm_reproduce/test'
-saved_weight='/data/project/rw/LMDesign_weights/mpnn_cmlm_trained_weight.pt' 
+save_dir='./result/mpnn_cmlm_reproduce/'
+saved_weight='/data/project/rw/LMDesign_weights/mpnn_cmlm_trained_weight.pt' ## If you are able to access project folder, you can use this code. Otherwise, install weights 
 
 ## This is model trained mpnn+cmlm with 4 decoder layer
 ## If you trained set num_encoder_layers and num_decoder_layers different, use them here. 
 python mpnn_test.py --use_pretrained_weights $saved_weight --out_folder $save_dir --jsonl_path $cath_file --file_splits $cath_splits --test_short_path $short_splits --test_single_path $single_splits --test_ts_directory $ts_dir --num_decoder_layers 4
-
