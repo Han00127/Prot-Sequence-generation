@@ -1,21 +1,20 @@
-### Structure-informed Langugage Models Are Protein Designers
+# Structure-informed Langugage Models Are Protein Designers
 
 This is the unofficial code of the arxiv paper *Structure-informed Language Models Are Protein Designers* published by *Zhang Zaixiang et al* 
 
 ![LMDesign](https://github.com/Han00127/Structure-informed-Language-Models-Are-Protein-Designers/assets/93216105/6bcdcb65-8ce7-4736-ae29-d0302a535c1f)
 
-# One line summary of implmentation: 
+## Summary of implmentation: 
 
-We achieve relatively similar performance in base model implementation like ProtMPNN, ProtMPNN-CMLM models. However, our implementation achieve surprising results on CATH4.2 and TS test datset such that we reach state-of-the-art performance on both dataset.
-our result / paper results. Please refer to "results/" together to verify the experimental results. 
+We achieve similar performance in base model implementation like ProtMPNN, ProtMPNN-CMLM models. However, our implementation on LM-Design achieves surprising results on CATH4.2 and TS test datset as shown in below Table. Please refer to "results/" together to verify the experimental results. 
 
 ![image](https://github.com/Han00127/Structure-informed-Language-Models-Are-Protein-Designers/assets/93216105/bc5c04a8-a81d-4f46-9eb1-3f75bfe18e5c)
 
 Code implmentation
 -----------------------------------------------------------------------------------------------------
-To run LMDesign clone this github repo and install corresponding **lmdesign.yaml** environemnt on your conda or if you are using Braincloud, use **lmdesing_final** shared image.
+To run LM-Design, clone my github repo and install corresponding **lmdesign.yaml** environemnt on your conda or if you are using Braincloud, use **lmdesing_final** shared image.
 
-If use yaml installation, please check dependency in yaml files and install with the following command: 
+For yaml installation, please check dependency in yaml files and install with the following command: 
 conda env create --file lmdesign.yaml 
 
 All methods are light weight models so that 1 GPU (V100) is enough. But it still has depency on CPU computing on featurizations on both structure and PLM models. 
@@ -26,7 +25,7 @@ Code organization:
 * `models/` - directory of models for LMDesign, Structure adapter, ProteinMPNN, Pifold, ESM models and utilities.   
 * `results/` - contains conducted experimental results like ProtMPNN, ProtMPNN-CMLM, LMDesign1, LMDesign2, and LMDesign2.
 * `scripts/` - contains the shell script to reproduce our models 
-* `weights/` - directory of base inverse fold model weight e.g, ProteinMPNN, PiFold
+* `weights/` - directory of base inverse fold model weight e.g, ProteinMPNN
 * `mpnn_train.py` - train and validate protMPNN and protMPNN-CMLM models 
 * `mpnn_test.py` - test protMPNN and protMPNN-CMLM models on CATH4.2 and extra test dataset TS50 and TS500
 * `lmdesign_train.py` - train and validate the variate LMDesign models on CATH4.2
@@ -34,9 +33,11 @@ Code organization:
 -----------------------------------------------------------------------------------------------------
 
 ## Data preparation 
-Main dataset used in this models are CATH4.2. To install the dataset, go to data and follow command:
+Main dataset used in this models are CATH4.2 and TS dataset. To install the dataset, go to data and follow command:
+
     ./download_preprocessed_dataset.sh 
-This will automatically download dataset on current folder. For TS dataset, it should be unzip after installation.
+    
+This will automatically download dataset on data directory..
 
 ## Trained model weight preparation 
 Trained ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
