@@ -37,52 +37,72 @@ Main dataset used in this models are CATH4.2 and TS dataset. To install the data
 
     ./download_preprocessed_dataset.sh 
     
-This will automatically download dataset on data directory..
+This will automatically download dataset on data directory. This should be done before any training or test.
+
+-----------------------------------------------------------------------------------------------------
 
 ## Trained model weight preparation 
-Trained ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS
-For reproducing the reported experimental results, install ProtMPNN, ProtMPNN-CMLM, LMDesign* weights from above. 
-For initial training model, ESM weights are mendatory.
+Trained ProtMPNN, ProtMPNN-CMLM, LMDesign1 (ProtMPNN-CMLM), LMDesign2 (Pretrained ProtMPNN-CMLM:finetune), LMDesign3 (Pretrained ProtMPNN-CMLM:freeze), ESM weights can be found https://shorturl.at/bopqS. To train the model, **ESM weight** should be ready.  
 
 -----------------------------------------------------------------------------------------------------
 ## Reproduce ProtMPNN and ProtMPNN-CMLM models 
-This model only has Structure encoder (ProtMPNN).
 To test pretrained ProtMPNN and ProtMPNN-CMLM model, please refer to "scripts/mpnn_test.sh". 
 To do so, set mendatory data path in shell scripts :
 ```
-save_dir='where you want to save the result of experiment'
-saved_weight='Trained weight path and id e.g., /data/project/rw/mpnn_results/reproduce2/model_weights/epoch100.pt'
-cath_file='path for CATH jsonl file e.g., /data/project/rw/cath4.2/chain_set.jsonl'
-cath_splits='path for split train/valid/test json file e.g., /data/project/rw/cath4.2/chain_set_splits.json'
-short_splits='path for short test json file e.g., /data/project/rw/cath4.2/test_split_L100.json'
-single_splits='path for single chain test json file e.g., /data/project/rw/cath4.2/test_split_sc.json'
-ts_dir='directory contains ts50, ts500 json file e.g., /data/project/rw/ts/'
+## set data path if run download_preprocessed_datasets.sh in data directory, don't need to modify here. ##
+cath_file='./data/chain_set.jsonl'
+cath_splits='./data/chain_set_splits.json'
+short_splits='./data/test_split_L100.json'
+single_splits='./data/test_split_sc.json'
+ts_dir='./data/ts/'
+
+save_dir='./result/mpnn_reproduce/' ## results directory 
+## If you are able to access project folder, you can use this code. 
+saved_weight='/data/project/rw/LMDesign_weights/mpnn_trained_weight.pt'
+## Otherwise, should be defined by the path where you install the weight
+saved_weight='' 
+
+# Test trained model on CATH4.2 and TS50 & 500
+# #################################################
+# ## set models - ProtMPNN
+# #################################################
+python mpnn_test.py --use_pretrained_weights $saved_weight --out_folder $save_dir --jsonl_path $cath_file --file_splits $cath_splits --test_short_path $short_splits --test_single_path $single_splits --test_ts_directory $ts_dir 
+
+#################################################
+## set models - ProtMPNN+CMLM
+#################################################
+save_dir='./result/mpnn_cmlm_reproduce/'
+saved_weight='/data/project/rw/LMDesign_weights/mpnn_cmlm_trained_weight.pt' 
+
+## This is model trained mpnn+cmlm with 4 decoder layer
+## If you trained set num_encoder_layers and num_decoder_layers different, use them here. 
+python mpnn_test.py --use_pretrained_weights $saved_weight --out_folder $save_dir --jsonl_path $cath_file --file_splits $cath_splits --test_short_path $short_splits --test_single_path $single_splits --test_ts_directory $ts_dir --num_decoder_layers 4
+
 ```
 after setting up above, run mpnn_test.sh file. Note that I set parallel execution on protMPNN and protMPNN-CMLM. Both setting should be configured. If not, please modify the code for single run.
 
 To train ProtMPNN model, please refer to "scripts/mpnn.sh" and "mpnn_train.py"
 ```
-    - Default setting of ProtMPNN model parameter 
-    argparser.add_argument("--hidden_dim", type=int, default=128, help="hidden model dimension")
-    argparser.add_argument("--num_layers", type=int, default=3, help="number of encoder layers") 
-    argparser.add_argument("--num_neighbors", type=int, default=48, help="number of neighbors for the sparse graph")   
-    argparser.add_argument("--dropout", type=float, default=0.1, help="dropout level; 0.0 means no dropout")
-    argparser.add_argument("--backbone_noise", type=float, default=0.2, help="amount of noise added to backbone during training") 
-    - Data path like CATH data path
-    argparser.add_argument("--out_folder", type=str, default='/data/project/rw/mpnn_results/MPNN/', help="Path to a folder to output sequences, e.g. /home/out/")
-    argparser.add_argument("--jsonl_path", type=str,default='/data/project/rw/cath4.2/chain_set.jsonl',help="Path to parsed pdb into jsonl")
-    argparser.add_argument("--file_splits", type=str, default='/data/project/rw/cath4.2/chain_set_splits.json', help='Path to train/valid/test split info')
-    argparser.add_argument("--test_short_path", type=str, default="/data/project/rw/cath4.2/test_split_L100.json", help="Path to Short test split")
-    argparser.add_argument("--test_single_path", type=str, default="/data/project/rw/cath4.2/test_split_sc.json", help="Path to Single test split")
-    argparser.add_argument("--chain_id_jsonl",type=str, default='', help="Path to a dictionary specifying which chains need to be designed and which ones are fixed, if not specied all chains will be designed.")
+## Define the datapath as mentioned above
+out_folder='./results/reproduce_mpnn_test'
+cathDataPath='./data/chain_set.jsonl'
+splits='./data/chain_set_splits.json'
+shortPath='./data/test_split_L100.json'
+scPath='./data/test_split_sc.json'
+
+python mpnn_train.py --model MPNN --epoch 100 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath
 ```
 after setting up above, run mpnn_train.sh file.
 
-To train ProtMPNN-CMLM model, everything same as above except :
+To train ProtMPNN-CMLM model, please refer to "scripts/mpnn_cmlm.sh" and "mpnn_train.py"
 ```
-    argparser.add_argument("--model", type=str, default="MPNN_CMLM", help="Select base models")
+# Training from pretrained model vanilla ProtMPNN model - v_48_020.pt)) encoder decoder 3 / 3 as same as official model
+# python mpnn_train.py --model MPNN_CMLM --epoch 1 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath
+
+## My trained models has 4 decoder layers training from scratch
+python mpnn_train.py --model MPNN_CMLM --epoch 1 --out_folder $out_folder --jsonl_path $cathDataPath --file_splits $splits --test_short_path $shortPath --test_single_path $scPath --use_pretrained_weights "" --num_decoder_layers 4 
 ```
-run mpnn.sh in script.
+run mpnn_cmlm.sh in script.
 
 -----------------------------------------------------------------------------------------------------
 ## Reproduce LMDesign models 
