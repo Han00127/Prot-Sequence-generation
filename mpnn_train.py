@@ -82,7 +82,7 @@ def main(args):
     print(f" Test short: {len(short_test_set)} Test sc : {len(sc_test_set)}")
 
     ## Set training models 
-    model = ProteinMPNN(ca_only=args.ca_only, num_letters=21, node_features=args.hidden_dim, edge_features=args.hidden_dim, hidden_dim=args.hidden_dim, num_encoder_layers=args.num_layers, num_decoder_layers=args.num_layers, augment_eps=args.backbone_noise, k_neighbors=args.num_neighbors)
+    model = ProteinMPNN(ca_only=args.ca_only, num_letters=21, node_features=args.hidden_dim, edge_features=args.hidden_dim, hidden_dim=args.hidden_dim, num_encoder_layers=args.num_encoder_layers, num_decoder_layers=args.num_decoder_layers, augment_eps=args.backbone_noise, k_neighbors=args.num_neighbors)
     model.to(device)
     print("Trainable parameters :", sum(p.numel() for p in model.parameters()))
     
@@ -266,7 +266,8 @@ if __name__ == "__main__":
     argparser.add_argument("--seed", type=int, default=0, help="If set to 0 then a random seed will be picked;")
 
     argparser.add_argument("--hidden_dim", type=int, default=128, help="hidden model dimension")
-    argparser.add_argument("--num_layers", type=int, default=3, help="number of encoder layers") 
+    argparser.add_argument("--num_encoder_layers", type=int, default=3, help="number of encoder layers") 
+    argparser.add_argument("--num_decoder_layers", type=int, default=3, help="number of encoder layers") 
     argparser.add_argument("--num_neighbors", type=int, default=48, help="number of neighbors for the sparse graph")   
     argparser.add_argument("--dropout", type=float, default=0.1, help="dropout level; 0.0 means no dropout")
     argparser.add_argument("--backbone_noise", type=float, default=0.0, help="amount of noise added to backbone during training") 
