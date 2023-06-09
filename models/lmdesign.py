@@ -8,9 +8,8 @@ from models.mpnn_utils import s_seq2plm_seq,CATH_tied_featurize,ProteinMPNN,cmlm
 import copy 
 
 
-class LMDesign(nn.Module): ## REAL Pi_LMDesign models
+class LMDesign(nn.Module): ## REAL LMDesign models
     def __init__(self, args, device):
-        """ Graph labeling network """
         super(LMDesign, self).__init__()
         self.args = args
         self.device = device
@@ -37,7 +36,9 @@ class LMDesign(nn.Module): ## REAL Pi_LMDesign models
         ## Load structure models
         ## This can be further devolped to accomodate more PLM  
         ######################## 
-        self.plm_model, self.alphabet = load_model_and_alphabet('/data/project/rw/ESM_weight/esm1b_t33_650M_UR50S.pt')
+        
+        self.plm_model, self.alphabet = load_model_and_alphabet(args.plm_weight)
+        # self.plm_model, self.alphabet = load_model_and_alphabet('/data/project/rw/ESM_weight/esm1b_t33_650M_UR50S.pt')
         self.tokenizer = self.alphabet.get_batch_converter()
         self.plm_model.to(self.device)
 
@@ -75,21 +76,18 @@ class LMDesign(nn.Module): ## REAL Pi_LMDesign models
         print(f"Entire parameters of lm_head {lm_head_params}")
         print(f"trainable parameters in lm_head {lm_head_trainable_params}")
         print("##########################################################")
-
+    
     def forward(self, inputs):
         '''
             inputs == batch 
             inputs = [name, seq, coords,...]
         '''
-        X, S, mask, lengths, chain_M, chain_encoding_all, chain_list_list, visible_list_list, masked_list_list, masked_chain_length_list_list, chain_M_pos, omit_AA_mask, residue_idx, dihedral_mask, tied_pos_list_of_lists_list, pssm_coef, pssm_bias, pssm_log_odds_all, bias_by_res_all, tied_beta = CATH_tied_featurize(inputs, self.device, None)
+        X, S, mask, _, chain_M, chain_encoding_all, _, _, _, _, chain_M_pos, _, residue_idx, _, _, _, _, _, _, _ = CATH_tied_featurize(inputs, self.device, None)
         randn_1 = torch.randn(chain_M.shape, device=X.device)
         s_log_probs, s_repre = self.s_model(X, S, mask, chain_M*chain_M_pos, residue_idx, chain_encoding_all, randn_1)    
         mask_for_loss = mask*chain_M*chain_M_pos
 
-        '''
-            To boost up the speed of training, this can alternativly be used in transformation module.
-        '''
-        ## seq 변환 
+        ## seq 변환 for PLM
         seqs = s_seq2plm_seq(S, mask)
         
         ## Reprocess data for PLM ## ESM LIKE TOKENS 
@@ -127,24 +125,24 @@ class LMDesign(nn.Module): ## REAL Pi_LMDesign models
         for k,v in self.head.named_parameters():
             v.requires_grad=False
 
-
     def iterative_refine_inference(self, inputs, iterations, temp=1.0):
-        X, S, mask, lengths, chain_M, chain_encoding_all, chain_list_list, visible_list_list, masked_list_list, masked_chain_length_list_list, chain_M_pos, omit_AA_mask, residue_idx, dihedral_mask, tied_pos_list_of_lists_list, pssm_coef, pssm_bias, pssm_log_odds_all, bias_by_res_all, tied_beta = CATH_tied_featurize(inputs, self.device, None)
+        
+        X, S, mask, _, chain_M, chain_encoding_all, _, _, _, _, chain_M_pos, _, residue_idx, _, _, _, _, _, _, _ = CATH_tied_featurize(inputs, self.device, None)
         GT_seqs = s_seq2plm_seq(S, mask)
         GT_data = []
         for i, seq in enumerate(GT_seqs):
             name = "batch_" + str(i)
             GT_data.append((name, seq))
         GT_tokens = self.tokenizer(GT_data)[-1]
-        GT_tokens = GT_tokens.to(self.device) ## to check correct sequence -> ''.join([self.alphabet.all_toks[s] for s in GT_tokens[0,1:-1]])
+        GT_tokens = GT_tokens.to(self.device) 
 
         randn_1 = torch.randn(chain_M.shape, device=X.device)
         log_probs, s_repre = self.s_model(X, S, mask, chain_M*chain_M_pos, residue_idx, chain_encoding_all, randn_1)    
         mask_for_loss = mask*chain_M*chain_M_pos
 
-        # '''
-        #     for iteration 만큼해서 Temperature로 뽑기!! print(''.join([self.alphabet.all_toks[s] for s in s_seqs[0]]))
-        # '''
+        ############################################
+        ## iteration 만큼해서 refinement temperature 가능 
+        ############################################
         for i in range(iterations-1): 
             s_seqs = torch.argmax(log_probs, dim=-1)
             
