@@ -1,6 +1,6 @@
 #!/bin/bash
 source /opt/conda/bin/activate base
-out_folder='./results/mpnn_reproduce'
+out_folder='./results/reproduce_mpnn_test'
 cathDataPath='./data/chain_set.jsonl'
 splits='./data/chain_set_splits.json'
 shortPath='./data/test_split_L100.json'
