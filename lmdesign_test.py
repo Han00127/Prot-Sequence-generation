@@ -61,14 +61,10 @@ def main(args):
         for key in ['train', 'validation', 'test']
     ]
 
-    # args.test_short_path
-    # file_splits='/data/project/rw/cath4.2/test_split_L100.json'
     with open(args.test_short_path) as f:
         dataset_splits = json.load(f)
     short_test_set = Subset(dataset, [dataset_indices[chain_name] for chain_name in dataset_splits['test'] if chain_name in dataset_indices])
 
-    # args.test_single_path
-    # file_splits='/data/project/rw/cath4.2/test_split_sc.json'
     with open(args.test_single_path) as f:
         dataset_splits = json.load(f)
     sc_test_set = Subset(dataset, [dataset_indices[chain_name] for chain_name in dataset_splits['test'] if chain_name in dataset_indices])
@@ -82,15 +78,13 @@ def main(args):
     print(sum(p.numel() for p in model.parameters()))
     print(sum(p.numel() for p in model.parameters() if p.requires_grad))
     if args.use_pretrained_weights:
-        # checkpoint= torch.load('/data/project/rw/lmdesign_results/lmdesign2_full_encode/model_weights/epoch100.pt') ## LMDESIGN1
-        # checkpoint= torch.load('/data/project/rw/lmdesign_results/lmdesign2_encoder/model_weights/epoch59.pt') ## LMDESIGN1_other
-        # checkpoint = torch.load('/data/project/rw/lmdesign_results/lmdesign_exp3/model_weights/epoch100.pt') # LMDESIGN 2
-        # checkpoint = torch.load('/data/project/rw/lmdesign_results/lmdesign_exp4/model_weights/epoch100.pt') # LMDESIGN 3
-        # model.load_state_dict(checkpoint['model_state_dict'])
         checkpoint = torch.load(args.use_pretrained_weights, map_location=device) 
         model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
 
+    # #############
+    # ## TS TEST 
+    # #############
     f = open(base_folder + 'results/ts50.csv','w', newline='')
     wr = csv.writer(f)
     header = ['Index', 'GT', 'PD', 'Perplexity', 'Acc']
@@ -155,9 +149,9 @@ def main(args):
     ts500_test_perplexity = np.exp(ts500_test_loss)
     ts500_test_recovery = np.median(ts500_recovery)
     TSoutput = "TS50 perplexity : {:.4f} TS50 median recovery {:.4f} TS500 perplexity : {:.4f} TS500 median recovery {:.4f}".format(ts50_test_perplexity.item(), ts50_test_recovery.item(),ts500_test_perplexity.item(), ts500_test_recovery.item())
-    # # #############
-    # # ## CATH TEST 
-    # # #############
+    # #############
+    # ## CATH TEST 
+    # #############
     f = open(base_folder + 'results/all_results.csv','w', newline='')
     wr = csv.writer(f)
     header = ['Index', 'GT', 'PD', 'Perplexity', 'Acc']
@@ -256,7 +250,6 @@ def main(args):
     sc_test_perplexity = np.exp(sc_test_loss)
     sc_recovery = np.median(sc_recovery)
 
-    # output = "Train perplexity : {:.4f} Shot perplexity : {:.4f} Short median recovery : {:.4f} Single chain perplexity : {:.4f} Single  median recovery: {:.4f} ".format(train_perplexity.item(), short_test_perplexity.item(), short_recovery.item(), sc_test_perplexity.item(), sc_recovery.item())
     CATHoutput = "All perplexity : {:.4f} All median recovery {:.4f} Shot perplexity : {:.4f} Short median recovery : {:.4f} Single chain perplexity : {:.4f} Single  median recovery: {:.4f} ".format(all_test_perplexity.item(), all_test_recovery.item(),short_test_perplexity.item(), short_recovery.item(), sc_test_perplexity.item(), sc_recovery.item())
     print(TSoutput)
     print(CATHoutput)
@@ -297,7 +290,7 @@ if __name__ == "__main__":
     argparser.add_argument("--num_heads", type=int, default=12, help='Number of heads used in attention')
     
     ## Iterative refinement configuration 
-    argparser.add_argument("--num_refinement", type=int, default=2, help='Smallest step set to 2, T=1')
+    argparser.add_argument("--num_refinement", type=int, default=5, help='Smallest step set to 2, T=1')
     argparser.add_argument("--temperature", type=float, default=1.0, help='Configuration of temperature 0.1, 0.5 1.0 1.2 1.5 and more for diversity 1.0 default')
     
     args = argparser.parse_args()    
