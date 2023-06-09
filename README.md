@@ -15,7 +15,8 @@ Code implmentation
 To run LM-Design, clone my github repo and install corresponding **lmdesign.yaml** environemnt on your conda or if you are using Braincloud, use **lmdesing_final** shared image.
 
 For yaml installation, please check dependency in yaml files and install with the following command: 
-conda env create --file lmdesign.yaml 
+    
+    conda env create --file lmdesign.yaml 
 
 All methods are light weight models so that 1 GPU (V100) is enough. But it still has depency on CPU computing on featurizations on both structure and PLM models. 
 
