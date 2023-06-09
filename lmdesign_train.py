@@ -82,13 +82,8 @@ def main(args):
     loader_valid = StructureLoader(validation_set, batch_size=args.batch_size)
     loader_test = StructureLoader(test_set, batch_size=args.batch_size)
     ##############################
-    ## load models     checkpoint_path="/data/private/ProteinMPNN-main/vanilla_model_weights/v_48_020.pt"
-    ## reproduce 
+    ## load models
     #############################
-    # checkpoint_path = "/data/project/rw/mpnn_results/reproduce2/model_weights/epoch97.pt"
-    # checkpoint = torch.load(checkpoint_path, map_location=device) 
-    # noise_level_print = checkpoint['noise_level']
-    # num_edges = checkpoint['num_edges']
     model = LMDesign(args, device)
     model.to(device)
     print("Total parameters ", sum(p.numel() for p in model.parameters()))
@@ -108,6 +103,7 @@ def main(args):
 
     import time 
     for e in range(args.epoch):
+        t0 = time.time()
         e += epoch
         model.train()
         train_sum, train_weights = 0., 0. 
@@ -123,7 +119,6 @@ def main(args):
             scaler.step(optimizer)
             scaler.update()
             
-            # masked perplexity 
             loss, loss_av = loss_nll(results['batch_tokens'][:,1:-1], results['log_probs'], results['c_mask'][:,1:-1])
             masked_sum = torch.sum(loss * results['c_mask'][:,1:-1]).cpu().data.numpy()
             masked_weight = torch.sum(results['c_mask'][:,1:-1]).cpu().data.numpy()
@@ -133,7 +128,9 @@ def main(args):
             writer.add_scalar('Train loss', loss_av_smoothed.item(), total_step)
             writer.add_scalar('Train perplexity', masked_perplexity.item(), total_step)
             total_step += 1
-        
+
+        t1 = time.time()
+
         model.eval()
         with torch.no_grad():
             valid_sum, valid_weights = 0., 0. 
@@ -246,7 +243,7 @@ if __name__ == "__main__":
     ## Structure model 
     argparser.add_argument("--structure_model", type=str, default='MPNN', help='Select base structure models')
     argparser.add_argument("--structure_trainable", type=bool, default=False, help='Structure models are frozen')
-    argparser.add_argument('--structure_weight', type=str, default='/data/private/ProteinMPNN-main/vanilla_model_weights/v_48_020.pt')
+    argparser.add_argument('--structure_weight', type=str, default='./weights/vanilla_model_weights/v_48_020.pt')
     argparser.add_argument("--hidden_dim", type=int, default=128, help='hidden model dimension')
     argparser.add_argument("--num_encoder_layers", type=int, default=3, help="number of encoder layers") 
     argparser.add_argument("--num_decoder_layers", type=int, default=3, help="number of decoder layers")
