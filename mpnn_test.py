@@ -64,7 +64,6 @@ def main(args):
         dataset_splits = json.load(f)
     short_test_set = Subset(dataset, [dataset_indices[chain_name] for chain_name in dataset_splits['test'] if chain_name in dataset_indices])
 
-    # file_splits='/data/project/rw/cath4.2/test_split_sc.json'
     with open(args.test_single_path) as f:
         dataset_splits = json.load(f)
     sc_test_set = Subset(dataset, [dataset_indices[chain_name] for chain_name in dataset_splits['test'] if chain_name in dataset_indices])
@@ -74,9 +73,6 @@ def main(args):
     ##############################
     ## load models 
     #############################
-    # checkpoint_path = "/data/project/rw/mpnn_results/reproduce2/model_weights/epoch100.pt"
-    # checkpoint_path = "/data/project/rw/lmdesign_results/mpnn_cmlm/model_weights/epoch100.pt"
-     ## protein mpnn_CMLM : decoder 4개!!!
     model = ProteinMPNN(ca_only=False, num_letters=21, node_features=args.hidden_dim, edge_features=args.hidden_dim, hidden_dim=args.hidden_dim,
                          num_encoder_layers=args.num_encoder_layers, num_decoder_layers=args.num_decoder_layers, augment_eps=args.backbone_noise,
                            k_neighbors=args.num_neighbors)
@@ -153,8 +149,7 @@ def main(args):
     ts500_test_loss = ts500_test_sum / ts500_test_weights
     ts500_test_perplexity = np.exp(ts500_test_loss)
     ts500_test_recovery = np.median(ts500_recovery)
-    output = "TS50 perplexity : {:.4f} TS50 median recovery {:.4f} TS500 perplexity : {:.4f} TS500 median recovery {:.4f}".format(ts50_test_perplexity.item(), ts50_test_recovery.item(),ts500_test_perplexity.item(), ts500_test_recovery.item())
-    print(output)
+    TSoutput = "TS50 perplexity : {:.4f} TS50 median recovery {:.4f} TS500 perplexity : {:.4f} TS500 median recovery {:.4f}".format(ts50_test_perplexity.item(), ts50_test_recovery.item(),ts500_test_perplexity.item(), ts500_test_recovery.item())
 
 
 
@@ -266,14 +261,13 @@ def main(args):
             Single chain perplexity : {:.4f} Single chain median recovery : {:.4f}".format(all_test_perplexity.item(), all_recovery.item(),
                                                                                             short_test_perplexity.item(), short_recovery.item(),
                                                                                             sc_test_perplexity.item(), sc_recovery.item())
+    print(TSoutput)
     print(output)
         
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     argparser.add_argument("--ca_only", action="store_true", default=False, help="Parse CA-only structures and use CA-only models (default: false)") 
     argparser.add_argument("--use_pretrained_weights", type=str, default="./weights/vanilla_model_weights/v_48_020.pt", help="pretraIned MPNN weights")
-    ## base model : /data/project/rw/mpnn_results/reproduce2/model_weights/epoch100.pt
-    ## cmlm : /data/project/rw/lmdesign_results/mpnn_cmlm/model_weights/epoch100.pt num_decoder 4 num_neighbors 48 or 64
     argparser.add_argument("--max_length", type=int, default=200000, help="Max sequence length")
     argparser.add_argument("--seed", type=int, default=2020, help="If set to 0 then a random seed will be picked;")
 
