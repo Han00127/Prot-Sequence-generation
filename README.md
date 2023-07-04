@@ -12,7 +12,7 @@ We achieve similar performance in base model implementation like ProtMPNN, ProtM
 
 Code implmentation
 -----------------------------------------------------------------------------------------------------
-To run LM-Design, clone my github repo and install corresponding **lmdesign.yaml** environemnt on your conda or if you are using Braincloud, use **lmdesing_final** shared image.
+To run LM-Design, clone github repo and install corresponding **lmdesign.yaml** environemnt on your conda.
 
 For yaml installation, please check dependency in yaml files and install with the following command: 
     
@@ -239,7 +239,6 @@ I strongly recommend to use parallel execution just add "&" in the scripts. This
 
 If you struggle with reproducing on my code,  please contact me via email (구일kthan 엣 gmail.com). Or any verification or feedback on my code will welcome :)
 
-Further training information on tensorboard are located in the Braincloud (e.g., /data/project/rw/lmdesign_results, codetest_result). 
 
 
 
