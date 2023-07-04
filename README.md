@@ -1,4 +1,4 @@
-# Structure-informed Langugage Models Are Protein Designers
+# Using Structure-informed Langugage Models Are Protein Designers
 
 This is the unofficial code of the arxiv paper *Structure-informed Language Models Are Protein Designers* published by *Zhang Zaixiang et al* 
 
